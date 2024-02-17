@@ -1,4 +1,5 @@
 import { ContentTitle } from "../components/ContentTitle.js";
+import { CARD_STATUS_KEY, PERSONAL_PROFILE_KEY } from "../constants/key.js";
 import { localStorage } from "../utils/localStorage.js";
 import { $ } from "../utils/selector.js";
 
@@ -14,9 +15,6 @@ const HomePage = () => {
   (async () => {
     const res = await fetch("/web/src/data/new_data.json");
     const profiles = await res.json();
-
-    const PERSONAL_PROFILE_KEY = "personalInfo";
-    const CARD_STATUS_KEY = "cardStatus";
 
     if (!localStorage.check(PERSONAL_PROFILE_KEY)) {
       localStorage.set(
@@ -36,7 +34,7 @@ const HomePage = () => {
     localStorage.get(PERSONAL_PROFILE_KEY).forEach((profile, idx) => {
       const card = $.create(
         "div",
-        cardStatus ? cardStatus[idx].status.split(" ") : ["card"]
+        cardStatus ? cardStatus[idx]?.status.split(" ") : ["card"]
       );
 
       card.idx = idx;

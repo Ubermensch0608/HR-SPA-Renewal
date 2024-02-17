@@ -114,6 +114,18 @@ header {
   display: block;
   width: 250px;
   margin: 0.75em auto;
+  font-size: 1em;
+  color: #5a5c66;
+}
+
+.form_elem label {
+  padding: 3px 5px;
+  font-size: 0.7em;
+  color: #5a5c66;
+}
+
+.form_elem span.mark {
+  color: red;
 }
 
 .form_elem input {
@@ -140,5 +152,12 @@ header {
   border: 0;
   border-radius: 1rem;
   box-sizing: border-box;
-  background: #dedede;
+  background-color: #29323c;
+  color: white;
+  font-size: 1em;
+}
+
+.form_elem button:hover {
+  background-color: #637488;
+  cursor: pointer;
 }
