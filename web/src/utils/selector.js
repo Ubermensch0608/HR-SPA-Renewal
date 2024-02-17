@@ -17,3 +17,7 @@ $.style = function (el, styles) {
 $.all = function (selector) {
   return document.querySelectorAll(selector);
 };
+
+$.click = function (el, callback) {
+  el.addEventListener("click", callback);
+};

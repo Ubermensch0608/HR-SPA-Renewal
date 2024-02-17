@@ -1,4 +1,5 @@
 import { ContentTitle } from "../components/ContentTitle.js";
+import { localStorage } from "../utils/localStorage.js";
 import { $ } from "../utils/selector.js";
 
 const HomePage = () => {
@@ -14,21 +15,47 @@ const HomePage = () => {
     const res = await fetch("/web/src/data/new_data.json");
     const profiles = await res.json();
 
-    window.localStorage.setItem(
-      "personalInfo",
-      JSON.stringify(profiles.map((profile, idx) => ({ idx, ...profile })))
-    );
+    const PERSONAL_PROFILE_KEY = "personalInfo";
+    const CARD_STATUS_KEY = "cardStatus";
 
-    profiles.forEach((profile, idx) => {
-      const card = $.create("div", ["card"]);
+    if (!localStorage.check(PERSONAL_PROFILE_KEY)) {
+      localStorage.set(
+        PERSONAL_PROFILE_KEY,
+        profiles.map((profile, idx) => ({ idx, ...profile }))
+      );
+    }
+
+    const cardStatus = localStorage.get(CARD_STATUS_KEY);
+    if (!cardStatus) {
+      localStorage.set(
+        CARD_STATUS_KEY,
+        profiles.map((profile, idx) => ({ idx, status: "card" }))
+      );
+    }
+
+    localStorage.get(PERSONAL_PROFILE_KEY).forEach((profile, idx) => {
+      const card = $.create(
+        "div",
+        cardStatus ? cardStatus[idx].status.split(" ") : ["card"]
+      );
 
       card.idx = idx;
       card.innerHTML = `
             <div class="card_plane card_plane--front">${profile.name}</div>
             <div class="card_plane card_plane--back">${profile.mbti}</div>
         `;
+
       card.addEventListener("click", (e) => {
         card.classList.toggle("is-flipped");
+        localStorage.set(
+          CARD_STATUS_KEY,
+          Array.from(cardsContainer.children).map((card) => ({
+            idx: card.idx,
+            status: card.classList.contains("is-flipped")
+              ? "card is-flipped"
+              : "card",
+          }))
+        );
       });
       cardsContainer.appendChild(card);
     });
