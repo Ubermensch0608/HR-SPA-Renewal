@@ -21,6 +21,9 @@ header {
   color: white;
 }
 
+.app {
+}
+
 .header {
   padding: 0px 20px;
   cursor: pointer;

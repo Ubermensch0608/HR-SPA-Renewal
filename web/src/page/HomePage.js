@@ -27,14 +27,16 @@ const HomePage = () => {
     if (!cardStatus) {
       localStorage.set(
         CARD_STATUS_KEY,
-        profiles.map((profile, idx) => ({ idx, status: "card" }))
+        localStorage
+          .get(PERSONAL_PROFILE_KEY)
+          .map((profile, idx) => ({ idx, status: "card" }))
       );
     }
 
     localStorage.get(PERSONAL_PROFILE_KEY).forEach((profile, idx) => {
       const card = $.create(
         "div",
-        cardStatus ? cardStatus[idx]?.status.split(" ") : ["card"]
+        cardStatus ? cardStatus[idx]?.status.split(" ") || ["card"] : ["card"]
       );
 
       card.idx = idx;

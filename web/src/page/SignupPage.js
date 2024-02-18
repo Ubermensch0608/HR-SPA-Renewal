@@ -3,70 +3,108 @@ import { PERSONAL_PROFILE_KEY } from "../constants/key.js";
 import { localStorage } from "../utils/localStorage.js";
 import { $ } from "../utils/selector.js";
 
+const SIGNUP_FORM_INPUT_OPTIONS = {
+  name: {
+    key: "name",
+    label: "이름",
+    type: "text",
+    placeholder: "이름",
+    required: true,
+  },
+  email: {
+    key: "email",
+    label: "이메일",
+    type: "text",
+    placeholder: "이메일",
+    required: true,
+  },
+  nickname: {
+    key: "nickname",
+    label: "닉네임",
+    type: "text",
+    placeholder: "닉네임",
+    required: true,
+  },
+  role: {
+    key: "role",
+    label: "직군",
+    type: "select",
+    required: true,
+    options: [
+      { value: "", text: "직군을 선택해주세요" },
+      { value: "frontend", text: "프론트엔드" },
+      { value: "backend", text: "백엔드" },
+      { value: "fullstack", text: "풀스택" },
+    ],
+  },
+  mbti: {
+    key: "mbti",
+    label: "MBTI",
+    type: "select",
+    options: [
+      { value: "", text: "MBTI를 선택해주세요" },
+      { value: "ISTJ", text: "ISTJ" },
+      { value: "ISFJ", text: "ISFJ" },
+      { value: "INFJ", text: "INFJ" },
+      { value: "INTJ", text: "INTJ" },
+      { value: "ISTP", text: "ISTP" },
+      { value: "ISFP", text: "ISFP" },
+      { value: "INFP", text: "INFP" },
+      { value: "INTP", text: "INTP" },
+      { value: "ESTP", text: "ESTP" },
+      { value: "ESFP", text: "ESFP" },
+      { value: "ENFP", text: "ENFP" },
+      { value: "ENTP", text: "ENTP" },
+      { value: "ESTJ", text: "ESTJ" },
+      { value: "ESFJ", text: "ESFJ" },
+      { value: "ENFJ", text: "ENFJ" },
+      { value: "ENTJ", text: "ENTJ" },
+    ],
+  },
+};
+
 const SignupPage = () => {
   const contentDom = $("#page_content");
 
   const formDom = $.create("form");
   formDom.id = "signup_form";
-  formDom.innerHTML = `
-    <span class="form_elem">
-        <label for="name">
-            이름
-            <span class="mark">(필수*)</span>
-        </label>
-        <input id="name" name="name" placeholder="이름" required />
-    </span>
-    <span class="form_elem">
-        <label for="email">
-            이메일
-            <span class="mark">(필수*)</span>
-        </label>
-        <input id="email" name="email" placeholder="이메일" required value="melanc@naver.com"/>
-    </span>
-    <span class="form_elem">
-        <label for="nickname">
-            닉네임
-            <span class="mark">(필수*)</span>
-        </label>
-        <input id="nickname" name="nickname" placeholder="닉네임" required value="우량아" />
-    </span>
-    <span class="form_elem">
-        <label for="role">
-            직군
-            <span class="mark">(필수*)</span>
-        </label>
-        <select id="role" name="role" required>
-            
-            <option value="frontend">프론트엔드</option>
-            <option value="backend">백엔드</option>
-            <option value="fullstack">풀스택</option>
-        </select>
-    </span>
-    <span class="form_elem">
-        <select id="mbti" name="mbti">
-            <option value="">MBTI를 선택해주세요</option>
-            <option value="ISTJ">ISTJ</option>
-            <option value="ISFJ">ISFJ</option>
-            <option value="INFJ">INFJ</option>
-            <option value="INTJ">INTJ</option>
-            <option value="ISTP">ISTP</option>
-            <option value="ISFP">ISFP</option>
-            <option value="INFP">INFP</option>
-            <option value="INTP">INTP</option>
-            <option value="ESTP">ESTP</option>
-            <option value="ESFP">ESFP</option>
-            <option value="ENFP">ENFP</option>
-            <option value="ENTP">ENTP</option>
-            <option value="ESTJ">ESTJ</option>
-            <option value="ESFJ">ESFJ</option>
-            <option value="ENFJ">ENFJ</option>
-            <option value="ENTJ">ENTJ</option>  
-        </select>
-    </span>
-    <span class="form_elem">
-        <button type="submit">등록</button>
-    </span>
-  `;
+
+  Object.entries(SIGNUP_FORM_INPUT_OPTIONS).forEach(([key, value]) => {
+    let result = "";
+    if (value.type === "text") {
+      result = `
+            <span class="form_elem">
+            <label for="${value.key}">
+                ${value.label}
+                ${value.required ? '<span class="mark">(필수*)</span>' : ""}
+            </label>
+            <input id="${value.key}" name="${value.key}" placeholder="${
+        value.placeholder
+      }" required />
+            </span>
+        `;
+    }
+    if (value.type === "select") {
+      result = `
+            <span class="form_elem">
+                <label for="${value.key}">
+                    ${value.label}
+                    ${value.required ? '<span class="mark">(필수*)</span>' : ""}
+                </label>
+                <select id="${value.key}" name="${value.key}" required>
+                    ${value.options
+                      .map(
+                        (option) =>
+                          `<option value="${option.value}">${option.text}</option>`
+                      )
+                      .join("")}
+                </select>
+            </span>
+        `;
+    }
+
+    formDom.innerHTML += result;
+  });
 
   contentDom.appendChild(ContentTitle({ title: "Signup Grate People!" }));
   contentDom.appendChild(formDom);
